@@ -26,15 +26,35 @@ public class Run {
 
         //distinct-> avoid duplicate values
 
-        Optional<Dish> first = dishes.stream().filter(d -> (d.getType() == DishType.VEG) &&
+       /* Optional<Dish> first = dishes.stream().filter(d -> (d.getType() == DishType.VEG) &&
                 (d.getCusineType() == CusineType.INDIAN)).distinct().findFirst();
         if (first.isPresent()){
 
         System.out.println(first.get());
-        }
+        }*/
+        List<List<String>> collect = dishes.stream().map(Dish::getIngredients).collect(Collectors.toList());
+        List<String> shoppingList = dishes.stream().flatMap(d -> d.getIngredients().stream()).distinct().collect(Collectors.toList());
+        //System.out.println(collect);
+        //System.out.println(shoppingList);
+
+        //dishes.stream().dropWhile(d -> d.getType() == DishType.NON_VEG).collect(Collectors.toList());;
+
+        // dishes.stream().flatMap(d -> d.getIngredients().stream()).distinct().collect(Collectors.toCollection(LinkedList::new));
+
+       // String collect1 = dishes.stream().flatMap(d -> d.getIngredients().stream()).distinct().collect(Collectors.joining("|"));
 
 
-            }
+        DoubleSummaryStatistics collect2 = dishes.stream().collect(Collectors.summarizingDouble(d -> d.getPrice()));
+        //System.out.println(collect2);
+
+        Map<DishType, List<Dish>> map = dishes.stream().collect(Collectors.groupingBy(Dish::getType, Collectors.toList()));
+       // System.out.println(map);
+
+        Integer reduce = Stream.of(1, 2, 3, 4, 5, 6).reduce(1, (a, b) -> a * b);
+        System.out.println(reduce);
+
+
+    }
     private static void addDishes(List <Dish> dishes){
         dishes.add(
                 Dish.builder()
